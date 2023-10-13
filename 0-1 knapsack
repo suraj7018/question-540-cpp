@@ -1,0 +1,29 @@
+class Solution
+{
+    public:
+    
+    int solve(int W, int wt[], int val[], int n, int index, vector<vector<int>> &dp){
+        // base case;
+        if(index == n)
+        return 0;
+        
+        if(dp[W][index] != -1)
+        return dp[W][index];
+        
+        int take = 0;
+        int nottake = 0;
+        
+        nottake = solve(W, wt, val, n, index+1, dp);
+        if(W-wt[index]>=0){
+            take = val[index]+solve(W-wt[index], wt, val, n,index+1, dp);
+        }
+        return dp[W][index] = max(take, nottake);
+        
+    }
+    //Function to return max value that can be put in knapsack of capacity W.
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>> dp(W+1, vector<int> (n+1, -1));
+       return solve(W, wt, val, n,0, dp);
+    }
+};
