@@ -1,0 +1,25 @@
+class Solution {
+  public:
+  
+    long long int solve(int coins[], int N, int sum, vector<vector<long long int>> &dp){
+        // base case
+        if(sum == 0)
+        return 1;
+        
+        if(sum<0 || N<0)
+        return 0;
+        
+        if(dp[N][sum] != -1)
+        return dp[N][sum];
+        
+        long long int a = solve(coins, N, sum - coins[N], dp);
+        long long int b = solve(coins, N-1, sum, dp);
+        
+        return dp[N][sum] = a+b;
+    }
+    long long int count(int coins[], int N, int sum) {
+        vector<vector<long long int>> dp(N, vector<long long int> (sum+1, -1));
+
+        return solve(coins, N-1, sum, dp);
+    }
+};
