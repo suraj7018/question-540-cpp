@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int solve(int i, int j, const vector<vector<int>>& M, vector<vector<int>> &dp) {
+        // base case;
+        if (j == 0)
+           return M[i][j];
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        int left = INT_MIN;
+        int leftup = INT_MIN;
+        int leftdown = INT_MIN;
+
+        // left;
+        if (j - 1 >= 0)
+            left = M[i][j] + solve(i, j - 1, M, dp);
+        // leftup;
+        if (j - 1 >= 0 && i - 1 >= 0)
+            leftup = M[i][j] + solve(i - 1, j - 1, M, dp);
+        // leftdown;
+        if (i + 1 < M.size() && j - 1 >= 0)
+            leftdown = M[i][j] + solve(i + 1, j - 1, M, dp);
+
+        return dp[i][j] = max(left, max(leftup, leftdown));
+    }
+
+    int maxGold(int n, int m, vector<vector<int>> M) {
+        int maxGold = INT_MIN;
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+
+        for (int i = 0; i < n; i++) {
+            int gold = solve(i, m-1, M, dp);
+            maxGold = max(gold, maxGold);
+        }
+
+        return maxGold;
+    }
+};
