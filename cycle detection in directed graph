@@ -1,0 +1,31 @@
+class Solution {
+public:
+    bool dfsiscycle(int node, vector<int> &visited, vector<int> &dfsvis, vector<int> adj[]) {
+        visited[node] = true;
+        dfsvis[node] = true;
+        for (auto nbr : adj[node]) {
+            if (!visited[nbr]) {
+                bool ans = dfsiscycle(nbr, visited, dfsvis, adj);
+                if (ans)
+                    return true;
+            } else if (dfsvis[nbr]) {
+                return true;
+            }
+        }
+        dfsvis[node] = false;
+        return false;
+    }
+
+    bool isCyclic(int V, vector<int> adj[]) {
+        vector<int> visited(V,0);
+        vector<int>dfsvis(V,0);
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (dfsiscycle(i, visited, dfsvis, adj)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}; 
