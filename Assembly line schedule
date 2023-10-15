@@ -1,0 +1,87 @@
+// this is the code of the memoisation where olny 5 testcase got stuck due to time limit;
+
+
+class Solution{
+  public:
+  
+  int solve(int i, int j, vector<vector<int>>& a, vector<vector<int>>& T, int n , vector<int>& x, vector<vector<int>> &dp){
+      // base case;
+      
+      if(j == n)
+      return x[i];
+      
+      if(dp[i][j] != -1)
+      return dp[i][j];
+      
+      int switchline = INT_MAX;
+      
+      // same line me chalne ke liye;
+      int insameline = solve(i, j+1, a, T, n, x, dp);
+      // line switch karne ke liye two case; 1->2 or 2->1;
+      if(j+1 <n){
+          // switching the line from 0 to 1;
+          if(i == 0)
+          {
+              switchline = T[i][j+1] + solve(1, j+1, a, T, n, x, dp);
+          }
+          else{
+              // here switching the line from 1 to 0;
+              switchline = T[i][j+1] + solve(0, j+1, a, T, n, x, dp);
+          }
+      }
+      return dp[i][j] = a[i][j]+min(insameline,switchline);
+  }
+  int carAssembly(vector<vector<int>>& a, vector<vector<int>>& T, vector<int>& e, vector<int>& x){
+      vector<vector<int>> dp(2, vector<int> (a[0].size()+1, -1));
+      int cost1 = e[0] + solve(0,0,a, T, a[0].size(),x, dp);
+      int cost2 = e[1] + solve(1, 0, a, T,a[0].size(), x, dp);
+      
+      return min(cost1, cost2);
+  }
+};
+
+// here the optimise code;
+
+class Solution{
+  public:
+  
+  int solve(int i, int j, vector<vector<int>>& a, vector<vector<int>>& T, int n , vector<int>& x){
+      vector<vector<int>> dp(2, vector<int> (a[0].size()+1, 0));
+      
+      dp[0][n] = x[0];
+      dp[1][n] = x[1];
+      
+      for(int j = n-1; j>=0; j--){
+          for(int i = 0; i <=1; i++){
+              
+              int switchline = INT_MAX;
+      
+      // same line me chalne ke liye;
+      int insameline = dp[i][j+1];
+      // line switch karne ke liye two case; 1->2 or 2->1;
+      if(j+1 <n){
+          // switching the line from 0 to 1;
+          if(i == 0)
+          {
+              switchline = T[i][j+1] + dp[1][j+1];
+          }
+          else{
+              // here switching the line from 1 to 0;
+              switchline = T[i][j+1] + dp[0][j+1];
+          }
+      }
+       dp[i][j] = a[i][j]+min(insameline,switchline);
+          }
+      }
+      return dp[i][0];
+  }
+  int carAssembly(vector<vector<int>>& a, vector<vector<int>>& T, vector<int>& e, vector<int>& x){
+      int cost1 = e[0] + solve(0,0,a, T, a[0].size(),x);
+      int cost2 = e[1] + solve(1, 0, a, T,a[0].size(), x);
+      
+      return min(cost1, cost2);
+  }
+};
+
+
+// we can also optimise this code to some more extent;
